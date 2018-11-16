@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Months and Years selector</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font: 12px/1.5 "microsoft yahei", Verdana, "Lucida Grande", Arial, Helvetica, sans-serif;
+        }
+        input {
+            outline: none;
+        }
+        .c {
+            line-height: 28px;
+            padding-left: 125px;
+            position: relative;
+        }
+        .c label {
+            font-size: 12px;
+            text-align: right;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 120px;
+        }
+        .col {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+        }
+        .iconpic {
+            height: 18px;
+            width: 18px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .iconpic-close {
+            background: url("iconpic.png") -143px -62px no-repeat;
+        }
+        .inp-box {
+            width: 100%;
+            position: relative;
+        }
+        .sel-inp, .inp {
+            -moz-appearance:none;
+            -webkit-appearance:none;
+            appearance:none;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -o-box-sizing: border-box;
+            box-sizing: border-box;
+            display: inline-block;
+            height: 30px;
+            line-height: 28px\9 !important;
+            width: 100%;
+            overflow: hidden;
+            padding-left: 10px;
+            padding-right: 10px;
+            position: relative;
+            -o-text-overflow:ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sel-inp {
+            background: url("arrowdown.png") 95% center no-repeat;
+            background: none\9 !important;
+            padding-right: 35px;
+            padding-right: 0\9 !important;
+            cursor: pointer;
+        }
+        .sel-inp::-ms-expand {
+            display: none;
+        }
+        .sel-inp:focus, .inp:focus {
+            border: 1px solid #5aaa13;
+            border-radius: 20px;
+            outline: none;
+        }
+        .inp-date {
+            background: url("icon_cal.png") 90% center no-repeat;
+            width: 123px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="c c1">
+    <label>Month and Years</label>
+    <div class="inp-box">
+        <input class="inp inp-date" type="text" name="timefrom" id="time_from_cn" value="" size="15" onClick="javascript:ShowCalendar(this.id)"/>
+        <span>-</span>
+        <input class="inp inp-date" type="text" name="timeto" id="time_to_cn" value="至今" size="15" onClick="javascript:ShowCalendar(this.id)"/>
+    </div>
+</div>
+
+<script type="text/javascript" src="monthpicker.js"></script>
+</body>
+</html>
