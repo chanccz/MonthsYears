@@ -1,0 +1,165 @@
+var agt = navigator.userAgent.toLowerCase();
+var is_ie = ((agt.indexOf("msie") != -1) && (agt.indexOf("opera") == -1));
+var is_gecko = (navigator.product == "Gecko");
+
+var months;
+var tomonth, fromTo, pX, pY;
+
+document.writeln("<div id='Calendar' style='position:absolute; z-index:1; visibility: hidden;'></div>");
+
+function getTomonth() {
+    var date = new Date();
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+}
+
+function getSelectMonth(str) {
+    var str = str.split(/\/|\-/)
+
+    var date = new Date(parseFloat(str[0]), parseFloat(str[1]) - 1);
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+}
+
+function Showmonth() {
+    var obj_Year = get_object('Year');
+    var parseYear = parseInt(obj_Year.options[obj_Year.selectedIndex].value);
+    var Seldate = new Date(parseYear, 1);
+    var startMonth = Seldate.getMonth();
+    var month = -1;
+    var monthly = 0;
+    var thisyear, thismonth;
+    var thisDate = new Date();
+    thisyear = thisDate.getFullYear();
+    thismonth = thisDate.getMonth();
+
+    if (tomonth.year == Seldate.getFullYear()) {
+        month = tomonth.month;
+    }
+
+    if (fromTo[2] === "cn") {
+        months = new Array("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月");
+    } else if (fromTo[2] === "en") {
+        months = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    }
+
+    var tableMonth = get_object('Month');
+    var monthTotal = months.length;
+    for (var row = 0; row < tableMonth.rows.length; row++) {
+        for (var intMonth = 0; intMonth < tableMonth.rows[row].cells.length; intMonth++) {
+            var cell = tableMonth.rows[row].cells[intMonth];
+            var cellbtn = tableMonth.rows[row].cells[intMonth].getElementsByTagName("button")[0];
+            if (monthly < monthTotal) {
+                cellbtn.style.cssText = 'cursor:pointer;background-color:#fff;border:0 none;border-right:1px solid #e0e0e0; border-bottom:1px solid #e0e0e0; font-family:Verdana; font-size:13px; padding: 10px;width:65px;';
+                if (monthly == month) {
+                    cellbtn.style.background = '#5AAA13';
+                    cellbtn.style.color = '#FFFFFF';
+                } else if (parseYear == thisyear && monthly > thismonth && fromTo[1] === "from") {
+                    cellbtn.disabled = "disabled";
+                } else {
+                    cellbtn.disabled = "";
+                }
+                cellbtn.innerHTML = months[monthly];
+                cellbtn.value = monthly;
+                monthly++;
+            }
+        }
+    }
+}
+
+function setMonth(idname, e) {
+    var sMonth;
+    var getElement = is_gecko ? e.target : event.srcElement;
+    var monthNum = getElement.value;
+    if (getElement.tagName == "BUTTON") {
+        if (getElement.value != "") {
+            sMonth = get_object('Year').value + "/" + (parseFloat(monthNum) + 1);
+            get_object(idname).value = sMonth;
+            HiddenCalendar();
+        }
+    }
+}
+
+function HiddenCalendar() {
+    get_object('Calendar').style.visibility = 'hidden';
+}
+
+function ShowCalendar(idname) {
+    var x, y, i, row, col;
+    var table;
+    var year, month;
+    var obj = get_object(idname);
+    var thisyear;
+    thisyear = new Date();
+    thisyear = thisyear.getFullYear();
+    tomonth = obj.value;
+    if (isDate(tomonth)) {
+        tomonth = new getSelectMonth(tomonth);
+    }
+
+    x = obj.offsetLeft;
+    y = obj.offsetTop;
+    while (obj = obj.offsetParent) {
+        x += obj.offsetLeft;
+        y += obj.offsetTop;
+    }
+    var Cal = get_object('Calendar');
+    Cal.style.left = x + 2 + 'px';
+    Cal.style.top = y + 30 + 'px';
+    Cal.style.visibility = "visible";
+
+    table = "<table border='0' cellspacing='0' style='border:1px solid #ddd; background-color:#fff;'>";
+    table += "<tr>";
+    table += "<td style='border-bottom:1px solid #e0e0e0; background-color:#f5f5f5;padding: 8px 10px;'>";
+
+    table += "<select class='sel-inp' name='Year' id='Year' onChange='Showmonth();' style='font-family:Verdana; font-size:12px'>";
+
+    fromTo = idname.split("_");
+    if (fromTo[1] === "from") {
+        thisyear;
+    } else if (fromTo[1] === "to") {
+        thisyear = thisyear + 10;
+    }
+
+    for (i = thisyear; i > thisyear - 80; i--) {
+        table += "<option value=" + i + " " + (i == tomonth.year ? "selected" : " ") + ">" + i + "</option>";
+    }
+    table += "</select>";
+
+    table += "</td>";
+    table += "<td style='border-bottom:1px solid #e0e0e0; background-color:#f5f5f5; padding: 10px 10px 8px; cursor: pointer; width: 18px;' onClick='javascript:HiddenCalendar()'><i class='col iconpic iconpic-close'></i></td>";
+    table += "</tr>";
+    table += "<tr><td align='center' colspan='2'>";
+    table += "<table id='Month' border='0' width='100%'>";
+    for (row = 0; row < 3; row++) {
+        table += "<tr>";
+        for (col = 0; col < 4; col++) {
+            table += "<td align='center'><button onClick='setMonth(\"" + idname + "\",event)'></button></td>";
+        }
+        table += "</tr>";
+    }
+    table += "</table></td></tr></table>";
+    Cal.innerHTML = table;
+    Showmonth();
+}
+
+function isDate(dateStr) {
+    var matchArray = dateStr.match(/^(\d{4})(\/|\-)(\d{1,2})$/);
+    if (matchArray == null) return false;
+    var year = matchArray[1];
+    var month = matchArray[3];
+    if (month < 1 || month > 12) return false;
+    return true;
+}
+
+function get_object(idname) {
+    if (document.getElementById) {
+        return document.getElementById(idname);
+    } else if (document.all) {
+        return document.all[idname];
+    } else if (document.layers) {
+        return document.layers[idname];
+    } else {
+        return null;
+    }
+}
